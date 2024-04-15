@@ -150,147 +150,11 @@ export class PromptingService {
     }
   }
 
-  async inpaintV2(
-    image: Express.Multer.File,
-    userPrompt: string,
-    preset: string,
-    outputFormat: string,
-    negativePrompt: string,
-  ) {
-    const chosenPreset = this.handlePreset(preset);
-    const promptToSend = `${userPrompt} ${chosenPreset}`;
-
-    if (!image) {
-      throw new HttpException('Image is not embedded', HttpStatus.BAD_REQUEST);
-    }
-
-    if (!negativePrompt) {
-      negativePrompt =
-        'extra limbs, blurry, bad quality, disconnected limbs, bad anatomy, poorly drawn fingers, missing limbs, fused fingers, fused limbs ';
-    }
-
-    console.log('Prompt:' + promptToSend);
-    console.log('Negative prompt:' + negativePrompt);
-
-    const formData = new FormData(); // INPAINTING
-    formData.append('image', image.buffer, {
-      filename: image.originalname,
-    });
-    formData.append('prompt', promptToSend);
-    formData.append('negative_prompt', negativePrompt);
-    formData.append('seed', 0);
-    formData.append('output_format', outputFormat);
-
-    try {
-      console.log('Sending request...');
-
-      const response = await this.axiosInstance.postForm(
-        'https://api.stability.ai/v2beta/stable-image/edit/inpaint',
-        formData,
-        {
-          headers: {
-            Authorization: 'Bearer ' + process.env.API_KEY, // CREATE YOUR .ENV FILE AND PUT THERE API_KEY (STABILITY API KEY)
-            Accept: 'image/*',
-            ...formData.getHeaders(),
-          },
-          responseType: 'arraybuffer',
-        },
-      );
-
-      console.log('Response received');
-
-      const filename = 'InpaintResponse-' + uuid() + '.' + outputFormat;
-      await this.saveImage(response.data, filename);
-
-      // transform arraybuffer to image
-
-      return Buffer.from(response.data, 'binary');
-    } catch (error) {
-      if (error.response) {
-        console.error('Error response:', error.response.data.toString());
-        console.error('Status code:', error.response.status);
-      } else if (error.request) {
-        console.error('No response received:', error.request);
-      } else {
-        console.error('Request error:', error.message);
-      }
-
-      throw new HttpException(
-        'Failed to generate image',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  // Doesn't work well
-  async outpaint(
-    image: Express.Multer.File,
-    userPrompt: string,
-    preset: string,
-    outputFormat: string,
-  ) {
-    const chosenPreset = this.handlePreset(preset);
-    const promptToSend = `${userPrompt} ${chosenPreset}`; // STILL UNUSED
-
-    if (!image) {
-      throw new HttpException('Image is not embedded', HttpStatus.BAD_REQUEST);
-    }
-
-    const formData = new FormData();
-    formData.append('image', image.buffer, { filename: image.originalname });
-    formData.append('left', 0);
-    formData.append('right', 0);
-    formData.append('up', 1);
-    formData.append('down', 0);
-    formData.append('prompt', userPrompt);
-    formData.append('seed', 0);
-    formData.append('output_format', outputFormat);
-
-    try {
-      console.log('Sending request...');
-
-      const response = await this.axiosInstance.postForm(
-        'https://api.stability.ai/v2beta/stable-image/edit/outpaint',
-        formData,
-        {
-          headers: {
-            Authorization: 'Bearer ' + process.env.API_KEY, // CREATE YOUR .ENV FILE AND PUT THERE API_KEY (STABILITY API KEY)
-            Accept: 'image/*',
-            ...formData.getHeaders(),
-          },
-          responseType: 'arraybuffer',
-        },
-      );
-
-      console.log('Response received');
-
-      const filename = 'OutpaintResponse-' + uuid() + '.' + outputFormat;
-      await this.saveImage(response.data, filename);
-
-      // transform arraybuffer to image
-
-      return Buffer.from(response.data, 'binary');
-    } catch (error) {
-      if (error.response) {
-        console.error('Error response:', error.response.data.toString());
-        console.error('Status code:', error.response.status);
-      } else if (error.request) {
-        console.error('No response received:', error.request);
-      } else {
-        console.error('Request error:', error.message);
-      }
-    }
-
-    throw new HttpException(
-      'Failed to generate image',
-      HttpStatus.INTERNAL_SERVER_ERROR,
-    );
-  }
-
   handlePreset(preset: string): string {
+    // TODO: rethink how to make this preset handler effective
     switch (preset) {
       case 'cartoon':
-        return (preset = Preset.CARTOON);
+        return (preset = '');
       case '':
       default: {
         throw new HttpException('Preset not found', HttpStatus.NOT_FOUND);
@@ -305,26 +169,6 @@ export class PromptingService {
       await fs.promises.writeFile(filePath, imageBuffer);
     } catch (error) {
       throw new Error('Failed to save image: ' + error);
-    }
-  }
-
-  async getListOfEngines() {
-    try {
-      const response = await this.axiosInstance.get(
-        'https://api.stability.ai/v1/engines/list',
-        {
-          headers: {
-            Authorization: 'Bearer ' + process.env.API_KEY, // CREATE YOUR .ENV FILE AND PUT THERE API_KEY (STABILITY API KEY)
-          },
-        },
-      );
-
-      return response.data;
-    } catch (error) {
-      throw new HttpException(
-        'Failed to get list of engines: ',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
     }
   }
 }
