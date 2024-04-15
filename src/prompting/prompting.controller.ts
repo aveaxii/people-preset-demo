@@ -10,7 +10,7 @@ import {
 import { PromptingService } from './prompting.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
-import { Utility } from './util';
+import { Utility } from './util/util';
 
 @Controller('prompting')
 export class PromptingController {

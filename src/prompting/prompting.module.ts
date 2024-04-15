@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PromptingController } from './prompting.controller';
 import { PromptingService } from './prompting.service';
-import { Utility } from './util';
+import { Utility } from './util/util';
 
 @Module({
   controllers: [PromptingController],

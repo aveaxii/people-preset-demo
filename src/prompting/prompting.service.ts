@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Preset } from './presets';
+import { Preset } from './preset/presets';
 import axios, { AxiosInstance } from 'axios';
 import * as FormData from 'form-data';
 import * as fs from 'fs';
 import { v4 as uuid } from 'uuid';
-import { PresetHandler } from './presetHandler';
+import { PresetHandler } from './preset/presetHandler';
 
 @Injectable()
 export class PromptingService {
