@@ -11,6 +11,7 @@ import { PromptingService } from './prompting.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { Utility } from './util/util';
+import { UserRequestPresetIdDto } from './dto/userRequestPresetIdDto';
 
 @Controller('prompting')
 export class PromptingController {
@@ -22,16 +23,12 @@ export class PromptingController {
   @Post('preset-16')
   @UseInterceptors(FileInterceptor('image'))
   async getPrompting16(
-    @Body('userPrompt') userPrompt: string,
-    @Body('preset') preset: string,
-    @Body('weight') weight: number,
+    @Body() userRequestPresetIdDto: UserRequestPresetIdDto,
     @UploadedFile() image: Express.Multer.File,
     @Res() res: Response,
   ) {
     const imageBuffer = await this.promptingService.imageToImageV16(
-      userPrompt,
-      preset,
-      weight,
+      userRequestPresetIdDto,
       image,
     );
 
@@ -41,27 +38,27 @@ export class PromptingController {
     res.end(imageBuffer);
   }
 
-  @Post('preset-XL')
-  @UseInterceptors(FileInterceptor('image'))
-  async getPromptingXL(
-    @Body('userPrompt') userPrompt: string,
-    @Body('preset') preset: string,
-    @Body('weight') weight: number,
-    @UploadedFile() image: Express.Multer.File,
-    @Res() res: Response,
-  ) {
-    const imageBuffer = await this.promptingService.imageToImageXL(
-      userPrompt,
-      preset,
-      weight,
-      image,
-    );
-
-    res.setHeader('Content-Type', 'image/jpeg');
-    res.setHeader('Content-Length', imageBuffer.length.toString());
-
-    res.end(imageBuffer);
-  }
+  // @Post('preset-XL')
+  // @UseInterceptors(FileInterceptor('image'))
+  // async getPromptingXL(
+  //   @Body('userPrompt') userPrompt: string,
+  //   @Body('preset') preset: string,
+  //   @Body('weight') weight: number,
+  //   @UploadedFile() image: Express.Multer.File,
+  //   @Res() res: Response,
+  // ) {
+  //   const imageBuffer = await this.promptingService.imageToImageXL(
+  //     userPrompt,
+  //     preset,
+  //     weight,
+  //     image,
+  //   );
+  //
+  //   res.setHeader('Content-Type', 'image/jpeg');
+  //   res.setHeader('Content-Length', imageBuffer.length.toString());
+  //
+  //   res.end(imageBuffer);
+  // }
 
   @Get('engines')
   async getEngines() {
