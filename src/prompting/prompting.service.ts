@@ -4,6 +4,8 @@ import axios, { AxiosInstance } from 'axios';
 import * as FormData from 'form-data';
 import * as fs from 'fs';
 import { v4 as uuid } from 'uuid';
+import { PresetHandler } from './presetHandler';
+
 @Injectable()
 export class PromptingService {
   private axiosInstance: AxiosInstance;
@@ -17,7 +19,7 @@ export class PromptingService {
     weight: number,
     image: Express.Multer.File,
   ) {
-    const chosenPreset = this.handlePreset(preset);
+    const chosenPreset = PresetHandler.handlePreset(preset);
 
     const promptToSend = `${userPrompt} ${chosenPreset}`;
     console.log(promptToSend);
@@ -87,7 +89,7 @@ export class PromptingService {
     weight: number,
     image: Express.Multer.File,
   ) {
-    const chosenPreset = this.handlePreset(preset);
+    const chosenPreset = PresetHandler.handlePreset(preset);
 
     const promptToSend = `${userPrompt} ${chosenPreset}`;
     console.log(promptToSend);
@@ -147,18 +149,6 @@ export class PromptingService {
         'Failed to generate image',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
-    }
-  }
-
-  handlePreset(preset: string): string {
-    // TODO: rethink how to make this preset handler effective
-    switch (preset) {
-      case 'cartoon':
-        return (preset = '');
-      case '':
-      default: {
-        throw new HttpException('Preset not found', HttpStatus.NOT_FOUND);
-      }
     }
   }
 
