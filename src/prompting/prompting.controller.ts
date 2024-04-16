@@ -38,27 +38,23 @@ export class PromptingController {
     res.end(imageBuffer);
   }
 
-  // @Post('preset-XL')
-  // @UseInterceptors(FileInterceptor('image'))
-  // async getPromptingXL(
-  //   @Body('userPrompt') userPrompt: string,
-  //   @Body('preset') preset: string,
-  //   @Body('weight') weight: number,
-  //   @UploadedFile() image: Express.Multer.File,
-  //   @Res() res: Response,
-  // ) {
-  //   const imageBuffer = await this.promptingService.imageToImageXL(
-  //     userPrompt,
-  //     preset,
-  //     weight,
-  //     image,
-  //   );
-  //
-  //   res.setHeader('Content-Type', 'image/jpeg');
-  //   res.setHeader('Content-Length', imageBuffer.length.toString());
-  //
-  //   res.end(imageBuffer);
-  // }
+  @Post('preset-XL')
+  @UseInterceptors(FileInterceptor('image'))
+  async getPromptingXL(
+    @Body() userRequestPresetIdDto: UserRequestPresetIdDto,
+    @UploadedFile() image: Express.Multer.File,
+    @Res() res: Response,
+  ) {
+    const imageBuffer = await this.promptingService.imageToImageXL(
+      userRequestPresetIdDto,
+      image,
+    );
+
+    res.setHeader('Content-Type', 'image/jpeg');
+    res.setHeader('Content-Length', imageBuffer.length.toString());
+
+    res.end(imageBuffer);
+  }
 
   @Get('engines')
   async getEngines() {
