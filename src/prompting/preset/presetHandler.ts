@@ -30,6 +30,33 @@ export class PresetHandler {
         break;
     }
 
+    switch (presetId.weightId) {
+      case 'skinny':
+        presetPrompt += Preset.SKINNY;
+        break;
+      case 'normal':
+        presetPrompt += Preset.NORMAL;
+        break;
+      case 'big':
+        presetPrompt += Preset.BIG;
+        break;
+    }
+
+    switch (presetId.skinToneId) {
+      case 'white':
+        presetPrompt += Preset.WHITE;
+        break;
+      case 'yellow':
+        presetPrompt += Preset.YELLOW;
+        break;
+      case 'brown':
+        presetPrompt += Preset.BROWN;
+        break;
+      case 'black':
+        presetPrompt += Preset.BLACK;
+        break;
+    }
+
     return presetPrompt;
   }
 }
