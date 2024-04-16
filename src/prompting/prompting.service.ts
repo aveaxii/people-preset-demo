@@ -33,13 +33,13 @@ export class PromptingService {
       filename: image.originalname,
     });
     formData.append('init_image_mode', 'IMAGE_STRENGTH');
-    formData.append('image_strength', 0.05); // 0.1, 0.07, 0.05 is good
-    formData.append('cfg_scale', 18); // 14, 22 is good
-    formData.append('clip_guidance_preset', 'SLOW'); // SIMPLE is good
+    formData.append('image_strength', 0.04); // 0.04 - 0.05 is good
+    formData.append('cfg_scale', 22); // 14, 22 is good
+    formData.append('clip_guidance_preset', 'SLOW'); // SIMPLE, SLOW is good
     formData.append('samples', 1);
     formData.append('seed', 0);
-    formData.append('steps', 50); // 33 is good
-    // formData.append('style_preset', 'digital-art');
+    formData.append('steps', 50); // 33, 50 is good
+    formData.append('style_preset', 'photographic');
     // formData.append('sampler', 'K_DPM_2');
     console.log('Sending request...');
 
