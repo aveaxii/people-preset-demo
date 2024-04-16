@@ -16,6 +16,12 @@ export class PresetHandler {
       case 'standing_straight':
         presetPrompt += Preset.STANDING_STRAIGHT;
         break;
+      case 'standing_arms_together':
+        presetPrompt += Preset.STANDING_ARMS_TOGETHER;
+        break;
+      case 'standing_arms_on_sides':
+        presetPrompt += Preset.STANDING_ARMS_ON_SIDES;
+        break;
     }
 
     switch (presetId.heightId) {
