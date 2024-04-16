@@ -3,4 +3,5 @@ export class UserRequestPresetIdDto {
   readonly poseId: string;
   readonly heightId: string;
   readonly weightId: string;
+  readonly skinToneId: string;
 }
