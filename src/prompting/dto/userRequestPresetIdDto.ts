@@ -4,4 +4,6 @@ export class UserRequestPresetIdDto {
   readonly heightId: string;
   readonly weightId: string;
   readonly skinToneId: string;
+  readonly hairColorId: string;
+  readonly hairLengthId: string;
 }
