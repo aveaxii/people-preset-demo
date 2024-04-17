@@ -34,7 +34,7 @@ export class PromptingService {
     });
     formData.append('init_image_mode', 'IMAGE_STRENGTH');
     formData.append('image_strength', 0.04); // 0.04 - 0.05 is good
-    formData.append('cfg_scale', 22); // 14, 22 is good
+    formData.append('cfg_scale', 24); // 14, 22 is good
     formData.append('clip_guidance_preset', 'SLOW'); // SIMPLE, SLOW is good
     formData.append('samples', 1);
     formData.append('seed', 0);
