@@ -42,12 +42,10 @@ export class PromptingController {
   @UseInterceptors(FileInterceptor('image'))
   async getPromptingXL(
     @Body() userRequestPresetIdDto: UserRequestPresetIdDto,
-    @UploadedFile() image: Express.Multer.File,
     @Res() res: Response,
   ) {
     const imageBuffer = await this.promptingService.imageToImageXL(
       userRequestPresetIdDto,
-      image,
     );
 
     res.setHeader('Content-Type', 'image/jpeg');
