@@ -5,11 +5,12 @@ import * as fs from 'fs';
 import { v4 as uuid } from 'uuid';
 import { PresetHandler } from './preset/presetHandler';
 import { UserRequestPresetIdDto } from './dto/userRequestPresetIdDto';
+import { PosesHandler } from './poses/posesHandler';
 
 @Injectable()
 export class PromptingService {
   private axiosInstance: AxiosInstance;
-  constructor() {
+  constructor(private readonly posesHandler: PosesHandler) {
     this.axiosInstance = axios.create();
   }
 
@@ -82,22 +83,23 @@ export class PromptingService {
     }
   }
 
-  async imageToImageXL(
-    userRequestPresetId: UserRequestPresetIdDto,
-    image: Express.Multer.File,
-  ) {
+  async imageToImageXL(userRequestPresetId: UserRequestPresetIdDto) {
     const chosenPreset = PresetHandler.handlePreset(userRequestPresetId);
-
     console.log(chosenPreset);
 
-    if (!image) {
-      throw new HttpException('Image is not embedded', HttpStatus.BAD_REQUEST);
+    console.log(userRequestPresetId.poseId);
+
+    let image;
+    if (userRequestPresetId.poseId) {
+      image = this.posesHandler.getPoseImage(userRequestPresetId.poseId);
+    } else {
+      image = this.posesHandler.getPoseImage('standing_straight'); // Default behaviour
     }
 
     const formData = new FormData();
     formData.append('text_prompts[0][text]', chosenPreset);
     formData.append('text_prompts[0][weight]', 1);
-    formData.append('init_image', image.buffer, {
+    formData.append('init_image', fs.createReadStream(image), {
       filename: image.originalname,
     });
     formData.append('init_image_mode', 'IMAGE_STRENGTH');
