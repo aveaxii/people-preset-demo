@@ -7,17 +7,6 @@ export class PosesHandler {
   constructor(rootPath: string) {
     this.rootPath = rootPath;
   }
-  // async getPose(pose: string) {
-  //   const poseImagePath = this.getPoseImage(pose);
-  //   if (poseImagePath) {
-  //     try {
-  //       const imageData = fs.readFileSync(poseImagePath);
-  //       return imageData;
-  //     } catch (error) {
-  //       throw new Error('Pose is not found');
-  //     }
-  //   }
-  // }
   getPoseImage(posePath: string) {
     switch (posePath) {
       case 'standing_straight':
